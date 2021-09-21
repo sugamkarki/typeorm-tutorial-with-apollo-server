@@ -7,31 +7,22 @@ import { createConnection } from "typeorm";
 import session from "express-session";
 import connectRedis from "connect-redis";
 //
-import { RegisterResolver } from "./modules/user/Register";
 import { redis } from "./redis";
 import cors from "cors";
-import { LoginResolver } from "./modules/user/Login";
-import { MeResolver } from "./modules/user/me";
-import { ConfirmUserResolver } from "./modules/user/ConfirmUser";
 //
 //
 const main = async () => {
   try {
     await createConnection();
     const schema = await buildSchema({
-      resolvers: [
-        RegisterResolver,
-        LoginResolver,
-        MeResolver,
-        ConfirmUserResolver,
-      ],
+      resolvers: [__dirname + "/modules/**/*.ts"],
       authChecker: ({ context: { req } }) => {
         return !!req.session.userId;
       },
     });
     const apolloServer = new ApolloServer({
       schema,
-      context: ({ req }: any) => ({ req }),
+      context: ({ req, res }: any) => ({ req, res }),
       plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
     });
     //

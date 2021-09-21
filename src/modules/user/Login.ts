@@ -11,7 +11,6 @@ export class LoginResolver {
     @Ctx() ctx: MyContext
   ): Promise<User | null> {
     const user = await User.findOne({ where: { email } });
-
     if (!user) {
       return null;
     }
@@ -23,6 +22,7 @@ export class LoginResolver {
     if (!user.confirmed) {
       return null;
     }
+    console.log(valid);
 
     // @ts-ignore
     ctx.req.session!.userId = user.id;
