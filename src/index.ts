@@ -14,7 +14,9 @@ const main = async () => {
     const schema = await buildSchema({
       resolvers: [RegisterResolver],
     });
-    const apolloServer = new ApolloServer({ schema });
+    const apolloServer = new ApolloServer({
+      schema,
+    });
     const app = express();
     await apolloServer.start();
     apolloServer.applyMiddleware({ app });
